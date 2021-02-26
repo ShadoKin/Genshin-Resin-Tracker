@@ -8,10 +8,22 @@ def getInput():
     if num >= 160:
         print("Go and use your resin, ya dolt")
         exit()
+    elif num < 0:
+        print("that is not possible, try again")
+        getInput()
     return num
 
+def getTarget(input_resin):
+    num = int(input("Enter how much resin you want regenerated: "))
+    if num < input_resin:
+        print("You can't regenerate less than you have, try again")
+        getTarget(input_resin)
+    else:
+        return num
+    return -1
 
-def calcHours(mins):
+
+def calcTotalHours(mins):
     total = mins / 60
     hrs = math.floor(total)
     remainder = total - hrs
@@ -56,20 +68,30 @@ def swap(modifier):
 
 
 if __name__ == '__main__':
-    input = getInput()
+    input_resin = getInput()
+    target = getTarget(input_resin)
 
-    resinToGain = 160 - input
+    resinToGain = 160 - input_resin
     totalMins = resinToGain * 8
 
-    time = calcHours(totalMins)
-    hrs = time[0]
-    mins = time[1]
+    total_time = calcTotalHours(totalMins)
+    total_hrs = total_time[0]
+    total_mins = total_time[1]
 
-    finishTime = calcFinishTime(hrs, mins)
+    finishTime = calcFinishTime(total_hrs, total_mins)
+
+    targetResinToGain = target - input_resin
+    targetMins = targetResinToGain * 8
+
+    target_time = calcTotalHours(targetMins)
+    target_hrs = target_time[0]
+    target_mins = target_time[1]
+
+    targetTime = calcFinishTime(target_hrs, target_mins)
 
     print('\n')
-    print(f'Your resin will take {hrs} hours and {mins} minutes to fully regenerate.')
-    print('\n')
+    print(f'Your resin will take {total_hrs} hours and {total_mins} minutes to fully regenerate.')
     print(f'It will finish at {finishTime}')
     print('\n')
-    
+    print(f'Your resin will take {target_hrs} hours and {target_mins} minutes to regenerate.')
+    print(f'It will finish at {targetTime}')
